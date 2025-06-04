@@ -1,5 +1,5 @@
 <div align="center">
-  [<img src="https://res.cloudinary.com/dgxxrnmkt/image/upload/v1741509088/MagnetDrop_Logo-removebg-preview_1_oleubc.png" alt="MagnetDrop Logo" width="250" height="250" />](https://res.cloudinary.com/daijhwmiz/image/upload/v1749044017/QuakeLogo_d9flim.png)
+  <img src="https://res.cloudinary.com/dgxxrnmkt/image/upload/v1741509088/MagnetDrop_Logo-removebg-preview_1_oleubc.png" alt="MagnetDrop Logo" width="250" height="250" />
 </div>
 
 Quake – Secure Peer-to-Peer File Sharing
