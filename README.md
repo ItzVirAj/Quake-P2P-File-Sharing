@@ -9,50 +9,50 @@ Quake – Secure Peer-to-Peer File Sharing
 
 
 Quake is a lightweight, secure, and real-time file-sharing application that leverages WebTorrent and WebRTC to enable direct peer-to-peer (P2P) transfers—no server storage, no waiting. Files are streamed instantly from sender to recipient, without ever being uploaded to a central server.
-🚀 Key Features
+# 🚀 Key Features
 
-  # Zero Server Storage – Files are never uploaded to a cloud or intermediary server.
+  Zero Server Storage – Files are never uploaded to a cloud or intermediary server.
 
-  # Real-Time P2P Streaming – Utilizes WebTorrent and WebRTC for direct data transfer.
+  Real-Time P2P Streaming – Utilizes WebTorrent and WebRTC for direct data transfer.
 
-  # Instant Sharing – Begin sharing files immediately; no lengthy uploads.
+  Instant Sharing – Begin sharing files immediately; no lengthy uploads.
 
-  # No Sign-Up Required – Share files anonymously with no user registration.
+  No Sign-Up Required – Share files anonymously with no user registration.
 
-  # Auto Expiry – Files vanish once the sender closes their browser session.
+  Auto Expiry – Files vanish once the sender closes their browser session.
 
-⚙️ How It Works
+# ⚙️ How It Works
 
   # Sender selects a file via the browser.
 
-  # A magnet link is generated and shared with the recipient.
+  A magnet link is generated and shared with the recipient.
 
-  # Recipient opens the link and begins downloading the file directly.
+  Recipient opens the link and begins downloading the file directly.
 
-  # File transfer occurs in real-time using secure WebRTC connections.
+  File transfer occurs in real-time using secure WebRTC connections.
 
-  # Once the sender leaves, the file is no longer accessible.
+  Once the sender leaves, the file is no longer accessible.
 
-❓ Frequently Asked Questions
-Does Quake use the traditional torrent network?
-
-Quake uses WebTorrent, which behaves like torrenting but runs in the browser with no public trackers or indexing.
-
-Who can access my file?
-
-Only individuals with the magnet link can access the file. The link is private—do not share it publicly.
-
-How is the file transferred?
-
-The file is chunked and streamed directly between peers using WebRTC, ensuring fast and efficient transmission.
-
-Is my file secure?
-
-Files are not searchable or stored anywhere publicly. However, anyone with the link can access it—consider sharing links privately or with added protection.
-
-What happens if I close my browser?
-
-If you’re the only seeder, the file becomes immediately unavailable. If others are downloading, they may continue to seed temporarily.
+# ❓ Frequently Asked Questions
+  Does Quake use the traditional torrent network?
+  
+  Quake uses WebTorrent, which behaves like torrenting but runs in the browser with no public trackers or indexing.
+  
+  Who can access my file?
+  
+  Only individuals with the magnet link can access the file. The link is private—do not share it publicly.
+  
+  How is the file transferred?
+  
+  The file is chunked and streamed directly between peers using WebRTC, ensuring fast and efficient transmission.
+  
+  Is my file secure?
+  
+  Files are not searchable or stored anywhere publicly. However, anyone with the link can access it—consider sharing links privately or with added protection.
+  
+  What happens if I close my browser?
+  
+  If you’re the only seeder, the file becomes immediately unavailable. If others are downloading, they may continue to seed temporarily.
 
 ## 🔍 Comparison with Similar Services
 
