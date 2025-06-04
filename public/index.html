@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quake</title>
+  <script src="https://kit.fontawesome.com/a8f44bb837.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="faviconcpy.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="dragdrop.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body class="px-4 [80px] flex flex-col items-center justify-start min-h-screen">
+
+<nav class="modern-navbar">
+  <input type="checkbox" id="sidebar-active">
+  
+  <label for="sidebar-active" class="menu-toggle">
+    <i class="fas fa-bars"></i>
+  </label>
+
+  <label id="overlay" for="sidebar-active"></label>
+
+  <div class="nav-content">
+    <a class="logo ml-4" href="index.html">
+      <img src="QuakeLogo.png" alt="Quake Logo" class="quake-logo" />
+      Quake
+    </a>
+
+    <div class="links-container">
+      <label for="sidebar-active" class="close-sidebar-button">
+        <i class="fas fa-times"></i>
+      </label>
+
+      <a href="index.html">
+        <i class="fas fa-house nav-icon"></i> Home
+      </a>
+
+      <a href="features.html">
+        <i class="fas fa-gears nav-icon"></i> How it Works?
+      </a>
+
+      <a href="https://github.com/ItzVirAj/Quake-P2P-File-Sharing" target="_blank">
+        <i class="fab fa-github nav-icon"></i> GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="box">
+  <h1 id="HomeScreen">Quake</h1>
+  
+  <p id="HomeScreenP" class="text-gray-400">Secure P2P File Sharing</p>
+
+  <main class="custom-main">
+   <div id="dropZone">
+  <p class="mb-4">Drag & Drop or Click to Browse</p>
+  <input type="file" id="fileInput" class="hidden" />
+  <button id="browseBtn" class="browse-btn">
+    📁 Browse File
+  </button>
+</div>
+
+
+    <div class="mt-4">
+  <button id="uploadBtn" class="upload-button hidden">
+    📤 Upload & Generate Link
+  </button>
+</div>
+
+<div id="uploadProgress" class="upload-status hidden mt-4">
+  <p id="uploadStatus">Uploading: Waiting for peers...</p>
+</div>
+
+<p id="fileInfo" class="file-info mt-4"></p>
+<p id="status" class="status-text"></p>
+
+<div class="mt-2" id="shareLink"></div>
+<div class="mt-4 flex justify-center" id="qrCode"></div>
+
+    <button id="downloadBtn" class="download-btn hidden mt-6">
+  ⬇️ Download
+</button>
+
+  </main>
+
+  <!-- Startup Modal -->
+ 
+</div>
+<!-- Info Box -->
+<div class="quake-info-box mt-12 mb-12">
+  <h2 class="quake-info-title">📢 Did You Know?</h2>
+  <p class="quake-info-description">
+    Quake is <strong>100% peer-to-peer</strong> — your files never touch a server. Want to help? <p>Star us on GitHub or contribute!</p>
+  </p>
+  <a href="https://github.com/ItzVirAj/Quake-P2P-File-Sharing" target="_blank"
+     class="quake-info-button">
+    ⭐ Contribute on GitHub
+  </a>
+</div>
+
+
+<script>
+  const client = new WebTorrent();
+  const socket = new WebSocket("ws://localhost:3000");
+
+  function generateQRCode(url) {
+    const container = document.getElementById("qrCode");
+    container.innerHTML = "";
+    new QRCode(container, {
+      text: url,
+      width: 128,
+      height: 128,
+      colorDark: "#ffffff",
+      colorLight: "#1e293b"
+    });
+  }
+
+ document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("startupModal");
+    const closeBtn = document.getElementById("closeStartupModal");
+
+    setTimeout(() => {
+      if (modal) modal.classList.remove("hidden");
+    }, 500);
+
+    if (modal && closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+      });
+    } else {
+      console.warn("Modal or close button not found");
+    }
+  });
+
+  window.shareFile = function () {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+    if (!file) return alert("Please select or drop a file first.");
+
+    document.getElementById("uploadProgress").classList.remove("hidden");
+
+    client.seed(file, (torrent) => {
+      const magnetURI = torrent.magnetURI;
+
+      document.getElementById("uploadStatus").textContent = "Uploading: Waiting for peers...";
+
+      torrent.on("wire", () => {
+        document.getElementById("uploadStatus").textContent = `Uploading: Seeding to ${torrent.numPeers} peer(s)...`;
+      });
+
+      socket.send(JSON.stringify({
+        type: "share",
+        magnet: magnetURI
+      }));
+
+      document.getElementById("fileInfo").innerText = `File: ${file.name}`;
+      document.getElementById("status").innerText = "Share this link to download!";
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "shortURL") {
+          const link = data.url;
+          document.getElementById("shareLink").innerHTML =
+            `<a href="${link}" target="_blank" class="text-blue-400 hover:underline">${link}</a>`;
+          generateQRCode(link);
+        }
+      };
+    });
+  };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</body>
+</html>
