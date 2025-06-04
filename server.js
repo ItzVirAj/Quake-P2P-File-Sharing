@@ -40,6 +40,7 @@ wss.on("connection", (ws) => {
     try {
       const data = JSON.parse(message);
 
+      // Handle file sharing request
       if (data.type === "share") {
         if (!isValidMagnet(data.magnet)) {
           ws.send(
@@ -48,21 +49,22 @@ wss.on("connection", (ws) => {
           return;
         }
 
+        // Generate short ID and store the magnet link with expiry
         const shortID = generateShortID();
         fileLinks.set(shortID, {
           magnet: data.magnet,
           expiresAt: Date.now() + LINK_EXPIRY_TIME,
         });
 
-        // Respond with short URL
+        // Send the short URL back to the client
         ws.send(
           JSON.stringify({
             type: "shortURL",
-            url: `http://localhost:3000/share/${shortID}`, // use your production URL if needed
+            url: `http://localhost:3000/share/${shortID}`, // Change this to your production URL if deployed
           })
         );
 
-        // Set timeout to delete the link
+        // Set timeout to delete the link after expiry
         setTimeout(() => {
           fileLinks.delete(shortID);
           console.log(`Deleted expired link: ${shortID}`);

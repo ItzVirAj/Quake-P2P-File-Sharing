@@ -71,7 +71,6 @@
   </button>
 </div>
 
-
     <div class="mt-4">
   <button id="uploadBtn" class="upload-button hidden">
     📤 Upload & Generate Link
@@ -93,11 +92,8 @@
 </button>
 
   </main>
-
-  <!-- Startup Modal -->
- 
 </div>
-<!-- Info Box -->
+
 <div class="quake-info-box mt-12 mb-12">
   <h2 class="quake-info-title">📢 Did You Know?</h2>
   <p class="quake-info-description">
@@ -109,12 +105,25 @@
   </a>
 </div>
 
-
 <script>
   const client = new WebTorrent();
   const socket = new WebSocket("ws://localhost:3000");
 
+  // WebSocket connection logs
+  socket.onopen = () => {
+    console.log('WebSocket connection established!');
+  };
+
+  socket.onerror = (err) => {
+    console.error('WebSocket error:', err);
+  };
+
+  socket.onclose = () => {
+    console.log('WebSocket connection closed');
+  };
+
   function generateQRCode(url) {
+    console.log("Generating QR code for:", url);
     const container = document.getElementById("qrCode");
     container.innerHTML = "";
     new QRCode(container, {
@@ -126,7 +135,7 @@
     });
   }
 
- document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("startupModal");
     const closeBtn = document.getElementById("closeStartupModal");
 
@@ -143,15 +152,22 @@
     }
   });
 
+  // File share functionality
   window.shareFile = function () {
     const fileInput = document.getElementById("fileInput");
     const file = fileInput.files[0];
-    if (!file) return alert("Please select or drop a file first.");
+    if (!file) {
+      alert("Please select or drop a file first.");
+      return;
+    }
 
+    console.log("File selected:", file.name); // Log the selected file
+    
     document.getElementById("uploadProgress").classList.remove("hidden");
 
     client.seed(file, (torrent) => {
       const magnetURI = torrent.magnetURI;
+      console.log("Magnet URI:", magnetURI); // Log the magnet URI
 
       document.getElementById("uploadStatus").textContent = "Uploading: Waiting for peers...";
 
@@ -169,15 +185,52 @@
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("Received data from WebSocket:", data); // Log the response
+
         if (data.type === "shortURL") {
           const link = data.url;
           document.getElementById("shareLink").innerHTML =
             `<a href="${link}" target="_blank" class="text-blue-400 hover:underline">${link}</a>`;
           generateQRCode(link);
+        } else {
+          console.error("Unexpected response:", data);
         }
       };
     });
   };
+
+  // Trigger file input on browse button click
+  document.getElementById("browseBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("fileInput").click();
+  });
+
+  // Show upload button when file selected
+  document.getElementById("fileInput").addEventListener("change", () => {
+    if (document.getElementById("fileInput").files.length > 0) {
+      document.getElementById("uploadBtn").classList.remove("hidden");
+    }
+  });
+
+  // Handle file drop
+  document.getElementById("dropZone").addEventListener("drop", (e) => {
+    e.preventDefault();
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+      document.getElementById("fileInput").files = droppedFiles;
+      document.getElementById("uploadBtn").classList.remove("hidden");
+    }
+  });
+
+  // Handle drag over styles
+  document.getElementById("dropZone").addEventListener("dragover", (e) => {
+    e.preventDefault();
+    document.getElementById("dropZone").classList.add("border-blue-400", "bg-gray-800");
+  });
+
+  document.getElementById("dropZone").addEventListener("dragleave", () => {
+    document.getElementById("dropZone").classList.remove("border-blue-400", "bg-gray-800");
+  });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
