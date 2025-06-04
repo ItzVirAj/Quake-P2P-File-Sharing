@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://res.cloudinary.com/daijhwmiz/image/upload/v1749044017/QuakeLogo_d9flim.png" alt="MagnetDrop Logo" width="250" height="250" />
+  <img src="https://res.cloudinary.com/daijhwmiz/image/upload/v1749044017/QuakeLogo_d9flim.png" alt="Quake Logo" width="250" height="250" />
 </div>
 
 Quake – Secure Peer-to-Peer File Sharing
@@ -51,12 +51,16 @@ Files are not searchable or stored anywhere publicly. However, anyone with the l
 What happens if I close my browser?
 
 If you’re the only seeder, the file becomes immediately unavailable. If others are downloading, they may continue to seed temporarily.
-🔍 Comparison with Similar Services
-Feature	Quake	FilePizza	Wormhole	Send Anywhere
-WebTorrent Support	✅ Yes	✅ Yes	❌ No	❌ No
-P2P Transfers	✅ Yes	✅ Yes	✅ Yes	✅ Yes
-End-to-End Encryption	🔒 Planned	❌ No	✅ Yes	✅ Yes
-File Expiry	⏳ After sender leaves	❌ No	✅ 24 hours	✅ Temporary
+
+## 🔍 Comparison with Similar Services
+
+| Feature               | **Quake**              | FilePizza | Wormhole    | Send Anywhere   |
+|-----------------------|------------------------|-----------|-------------|-----------------|
+| WebTorrent Support    | ✅ Yes                 | ✅ Yes    | ❌ No       | ❌ No           |
+| P2P Transfers         | ✅ Yes                 | ✅ Yes    | ✅ Yes      | ✅ Yes          |
+| End-to-End Encryption | 🔒 Planned             | ❌ No     | ✅ Yes      | ✅ Yes          |
+| File Expiry           | ⏳ After sender leaves | ❌ No     | ✅ 24 hours | ✅ Temporary    |
+
 🛠️ Roadmap & Future Enhancements
 
     ✅ End-to-End Encryption for maximum data security
